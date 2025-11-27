@@ -102,4 +102,31 @@ public boolean eliminarProducto(Seguro seguro) {
         Conexion.close(conn);
     }
 }
+public boolean actualizarProducto(Producto producto) {
+    String sql = "UPDATE producto SET nombre = ?, descripcionGeneral = ?, descripcionDetallada = ?, porcentajeCobertura = ? WHERE id = ?";
+    Connection conn = null;
+    PreparedStatement ps = null;
+
+    try {
+        conn = Conexion.getConnection();
+        ps = conn.prepareStatement(sql);
+
+        ps.setString(1, producto.getNombre());
+        ps.setString(2, producto.getDescripcionGeneral());
+        ps.setString(3, producto.getDescripcionDetallada());
+        ps.setDouble(4, producto.getPorcentajeCobertura());
+        ps.setInt(5, producto.getId()); // ← Se usa el ID para identificar la fila
+
+        int filasAfectadas = ps.executeUpdate();
+        return filasAfectadas > 0;
+
+    } catch (SQLException e) {
+        System.err.println("Error al actualizar producto: " + e.getMessage());
+        return false;
+    } finally {
+        try { if (ps != null) ps.close(); } catch (SQLException e) {}
+        Conexion.close(conn);
+    }
+}
+
 }

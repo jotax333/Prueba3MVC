@@ -1,0 +1,81 @@
+package controlador;
+
+
+import bd.conexionBD;
+import Modelo.Seguro;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+/**
+ *
+ * @author Central Gamer
+ */
+public class controlador {
+    public boolean agregarSeguro(Seguro seguro) {
+        String sql = "INSERT INTO producto (id, nombre, descripcionGeneral,descripcionDetallada,porcentajeCobertura) VALUES (?, ?, ? , ?, ?)";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = conexionBD.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, seguro.getId());
+            ps.setString(2, seguro.getNombre());
+            ps.setString(3, seguro.getDescripcionGeneral());
+            ps.setString(4, seguro.getDescripcionDetallada());
+            ps.setDouble(5,seguro.getPorcentajeCobertura());
+
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error al agregar Seguro: " + e.getMessage());
+            return false;
+        } finally {
+            try {
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            conexionBD.close(conn);
+        }
+    }
+
+    public List<Seguro> listarSeguros() {
+        List<Seguro> seguro = new ArrayList<>();
+        String sql = "SELECT id, nombre, descripcionGeneral , descripcionDetallada, porcentajeCobertura FROM seguro ORDER BY id DESC";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = conexionBD.getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Seguro s = new Seguro(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("descripcionGeneral"),
+                        rs.getString("descripcionDetallada"),
+                        rs.getDouble("porcentajeCobertura")
+                );
+                seguro.add(s);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al listar Seguros: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            conexionBD.close(conn);
+        }
+        return seguro;
+    }
+}

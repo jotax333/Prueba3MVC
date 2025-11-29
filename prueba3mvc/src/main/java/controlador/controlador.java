@@ -13,18 +13,17 @@ import java.util.List;
  */
 public class controlador {
     public boolean agregarSeguro(Seguro seguro) {
-        String sql = "INSERT INTO producto (id, nombre, descripcionGeneral,descripcionDetallada,porcentajeCobertura) VALUES (?, ?, ? , ?, ?)";
+        String sql = "INSERT INTO seguro (nombre, descripcionGeneral,descripcionDetallada,porcentajeCobertura) VALUES (?, ?, ? , ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
 
         try {
             conn = conexionBD.getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setInt(1, seguro.getId());
-            ps.setString(2, seguro.getNombre());
-            ps.setString(3, seguro.getDescripcionGeneral());
-            ps.setString(4, seguro.getDescripcionDetallada());
-            ps.setDouble(5,seguro.getPorcentajeCobertura());
+            ps.setString(1, seguro.getNombre());
+            ps.setString(2, seguro.getDescripcionGeneral());
+            ps.setString(3, seguro.getDescripcionDetallada());
+            ps.setDouble(4,seguro.getPorcentajeCobertura());
 
             int filasAfectadas = ps.executeUpdate();
             return filasAfectadas > 0;

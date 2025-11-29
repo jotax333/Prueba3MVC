@@ -7,7 +7,7 @@ import java.sql.SQLException;
  * @author Informatica
  */
 public class conexionBD {
-    private static final String URL = "jdbc:mysql://localhost:3306/mibase";
+    private static final String URL = "jd=bc:mysql://localhost:3306/mibase";
     private static final String USER = "root";
     private static final String PASSWORD = ""; // Ajusta si tienes contraseña
 
